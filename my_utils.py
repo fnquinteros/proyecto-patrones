@@ -92,48 +92,6 @@ def extract_features(dirpath, fmt, options):
     return data
 
 
-def fisher_score(feats):
-    N = feats.shape[1]
-    num_classes = feats.shape[0]
-    num_features = feats.shape[2]
-    images_per_class = N//num_classes
-    N_k = N/num_classes
-    p_k = 1/num_classes
-    C_k_param = 1/(N_k - 1)
-    z_ = np.zeros(num_features)
-    for i in range(num_classes):
-        for j in range(N//num_classes):
-            z_ += feats[i][j]
-    z_ = z_/N
-
-    z_k_ = [np.zeros(num_features) for i in range(num_classes)]
-    for i in range(num_classes):
-        for j in range(images_per_class):
-            z_k_[i] += feats[i][j]
-        z_k_[i] /= images_per_class
-
-    C_b = 0
-    for i in range(len(z_k_)):
-        vect = (z_k_[i] - z_)
-        vect = vect.reshape(1, vect.shape[0])
-        t_vect = vect.reshape(vect.shape[1], 1)
-        C_b += p_k*(t_vect).dot(vect)
-    C_w = 0
-    for k in range(num_classes):
-        C_k = 0
-        for j in range(images_per_class):
-            vect = (feats[k][j] - z_k_[k])
-            vect = vect.reshape(1, vect.shape[0])
-            t_vect = vect.reshape(vect.shape[1], 1)
-            C_k += (t_vect).dot(vect)
-        C_k *= C_k_param
-        C_w += p_k * C_k
-    try:
-        return (np.linalg.inv(C_w)*C_b).trace()
-    except np.linalg.LinAlgError:
-        return -np.inf
-
-
 def filter_feats(features, selected):
     col_idx = list(selected)
     return features[:, :, col_idx]
@@ -150,9 +108,8 @@ def dirfiles(img_path, img_ext):
     img_names = fnmatch.filter(sorted(os.listdir(img_path)), img_ext)
     return img_names
 
+
 # Acomoda los datos de las features para pasarlos al clasificador
-
-
 def get_data(train, num_classes):
     all_data_l = []
     labels = []

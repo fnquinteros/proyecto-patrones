@@ -20,10 +20,8 @@ for i in range(1, 167):
         n = '00' + n
     elif len(n) == 2:
         n = '0' + n
-    else:
-        pass
     print(f'... reading FaceMask166/FM000{n} ...')
-    for j in range(3):
+    for j in range(6):
         features = extract_features_img(
             f'FaceMask166/FM000{n}_0{j+1}.jpg', OPTIONS)
         if j == 0:

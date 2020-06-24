@@ -10,7 +10,7 @@ if __name__ == "__main__":
         all_features = np.array(feats_d['0'])
 
     A = all_features[:16, :, :]
-    B = all_features[16:56, :, :]
+    B = all_features[:40, :, :]
 
     A_train_feats = A[:, :3, :]
     A_val_feats = A[:, 3, :]
@@ -21,7 +21,6 @@ if __name__ == "__main__":
     B_test_feats = B[:, 4:6, :]
 
     # limpiamos las features muy correlacionadas
-
     A_clean_idx = clean(A_train_feats.reshape(
         A_train_feats.shape[0] * A_train_feats.shape[1],
         A_train_feats.shape[-1]
@@ -36,7 +35,6 @@ if __name__ == "__main__":
     )
 
     # seleccionamos las mejores 50 features
-
     X_train, y_train = get_data(A_train_feats, 16)
     X_val, y_val = get_data(A_val_feats, 16)
     X_test, y_test = get_data(A_test_feats, 16)
