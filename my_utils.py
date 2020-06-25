@@ -57,6 +57,10 @@ def extract_features_img(st, options):
                                      vdiv=vdiv, mapping='nri_uniform')
                 feats.append(XBlue)
         if options.get('hog'):
+            hog = options.get('hog')
+            v_windows = hog.get('v_windows')
+            h_windows = hog.get('h_windows')
+            n_bins = hog.get('n_bins')
             Hog = hog_features(gray, v_windows=4, h_windows=4, n_bins=16)
             feats.append(Hog)
         if options.get('gupta'):

@@ -41,8 +41,8 @@ if __name__ == "__main__":
     print(y_train, y_val)
 
     # X_train, X_val, sfs_idx = sfs_features(
-    #     X_train, X_val, y_train, n_features=50)
-    # x_test = X_test[:, sfs_idx]
+    #    X_train, X_val, y_train, n_features=50)
+    # X_test = X_test[:, sfs_idx]
 
     with open('selected_features.json', 'w') as f:
         d = {

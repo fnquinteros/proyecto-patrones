@@ -5,9 +5,14 @@ import json
 
 OPTIONS = {
     'lbp': {
-        'gray': True,
+        'red': True,
         'hdiv': 4,
-        'vdiv': 8
+        'vdiv': 8,
+    },
+    'hog': {
+        'v_windows': 4,
+        'h_windows': 4,
+        'n_bins': 16
     },
     'masked': True
 }
