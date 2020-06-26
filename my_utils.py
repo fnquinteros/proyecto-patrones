@@ -9,6 +9,7 @@ from pybalu.feature_extraction import (
 from pybalu.feature_selection import clean, exsearch, sfs
 from pybalu.img_processing import segbalu
 from sklearn.metrics import confusion_matrix, accuracy_score
+from skimage.feature import hog
 
 
 def imshow(image):
@@ -26,7 +27,7 @@ def get_image(path, show=False):
 def extract_features_img(st, options):
     img = get_image(st)
     if options.get('masked'):
-        img = img[:img.shape[0]//2]
+        img = img[:img.shape[0] // 2]
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     b_img, _, _ = segbalu(img)
 
@@ -57,11 +58,17 @@ def extract_features_img(st, options):
                                      vdiv=vdiv, mapping='nri_uniform')
                 feats.append(XBlue)
         if options.get('hog'):
-            hog = options.get('hog')
-            v_windows = hog.get('v_windows')
-            h_windows = hog.get('h_windows')
-            n_bins = hog.get('n_bins')
-            Hog = hog_features(gray, v_windows=4, h_windows=4, n_bins=16)
+            hog_opt = options.get('hog')
+            v_windows = hog_opt.get('v_windows')
+            h_windows = hog_opt.get('h_windows')
+            n_bins = hog_opt.get('n_bins')
+            # # <Código Kathy>
+            # w = 125 // h_windows
+            # h = 62 // v_windows
+            # Hog = hog(img, orientations=n_bins, pixels_per_cell=(h, w),
+            #     cells_per_block=(1, 1), block_norm='L2-Hys', multichannel=True)
+            # # </CódigoKathy>
+            Hog = hog_features(gray, v_windows=v_windows, h_windows=h_windows, n_bins=n_bins)
             feats.append(Hog)
         if options.get('gupta'):
             Gupta = gupta_features(b_img)
