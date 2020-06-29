@@ -4,3 +4,4 @@ FaceMask166/
 __pycache__/
 all_features.json
 selected_features.json
+env
