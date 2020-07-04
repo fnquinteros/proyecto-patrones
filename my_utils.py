@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import cv2
 from PIL import Image
 from pybalu.feature_extraction import (
-    lbp_features, hog_features, gupta_features, hugeo_features, flusser_features)
+    lbp_features, gupta_features, hugeo_features, flusser_features)
 from pybalu.feature_selection import clean, exsearch, sfs
 from pybalu.img_processing import segbalu
 from sklearn.metrics import confusion_matrix, accuracy_score
@@ -62,13 +62,10 @@ def extract_features_img(st, options):
             v_windows = hog_opt.get('v_windows')
             h_windows = hog_opt.get('h_windows')
             n_bins = hog_opt.get('n_bins')
-            # # <Código Kathy>
-            # w = 125 // h_windows
-            # h = 62 // v_windows
-            # Hog = hog(img, orientations=n_bins, pixels_per_cell=(h, w),
-            #     cells_per_block=(1, 1), block_norm='L2-Hys', multichannel=True)
-            # # </CódigoKathy>
-            Hog = hog_features(gray, v_windows=v_windows, h_windows=h_windows, n_bins=n_bins)
+            w = 125 // h_windows
+            h = 62 // v_windows
+            Hog = hog(img, orientations=n_bins, pixels_per_cell=(h, w),
+                cells_per_block=(1, 1), block_norm='L2-Hys', multichannel=True)
             feats.append(Hog)
         if options.get('gupta'):
             Gupta = gupta_features(b_img)
