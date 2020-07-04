@@ -73,7 +73,7 @@ if __name__ == "__main__":
         score = clf.score(Xv, yv)
         print(f'Logistic regression score: {score}')
 
-        nn = MLPClassifier(hidden_layer_sizes=(1000), max_iter=1000, activation='logistic')
+        nn = MLPClassifier(hidden_layer_sizes=(2048), max_iter=1000, activation='logistic')
         nn.fit(X, y)
         nn_score = nn.score(Xv, yv)
         print(f'Neural network score: {nn_score}')

@@ -108,7 +108,7 @@ def filter_feats(features, selected):
 
 
 def sfs_features(X_train, X_val, X_test, y_train, n_features):
-    sfs_idx = sfs(X_train, y_train, n_features=n_features)
+    sfs_idx = sfs(X_train, y_train, n_features=n_features, show=True)
     X_train_sfs = X_train[:, sfs_idx]
     X_val_sfs = X_val[:, sfs_idx]
     X_test_sfs = X_test[:, sfs_idx]
