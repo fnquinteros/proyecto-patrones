@@ -10,6 +10,8 @@ from pybalu.feature_selection import clean, exsearch, sfs
 from pybalu.img_processing import segbalu
 from sklearn.metrics import confusion_matrix, accuracy_score
 from skimage.feature import hog
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from pybalu.feature_transformation import pca
 
 
 def imshow(image):
@@ -105,17 +107,36 @@ def filter_feats(features, selected):
     return features[:, :, col_idx]
 
 
-def sfs_features(X_train, X_test, y_train, n_features):
-    sfs_idx = sfs(X_train, y_train, n_features=n_features)
+def sfs_features(X_train, X_val, X_test, y_train, n_features):
+    sfs_idx = sfs(X_train, y_train, n_features=n_features, show=True)
     X_train_sfs = X_train[:, sfs_idx]
+    X_val_sfs = X_val[:, sfs_idx]
     X_test_sfs = X_test[:, sfs_idx]
-    return X_train_sfs, X_test_sfs, sfs_idx
+    return X_train_sfs, X_val_sfs, X_test_sfs
 
 
 def dirfiles(img_path, img_ext):
     img_names = fnmatch.filter(sorted(os.listdir(img_path)), img_ext)
     return img_names
 
+def norm_features(X_train, X_val, X_test):
+    scaler = StandardScaler()
+    X_train_norm = scaler.fit_transform(X_train)
+    X_val_norm = scaler.transform(X_val)
+    X_test_norm = scaler.transform(X_test)
+    
+    return X_train_norm, X_val_norm, X_test_norm
+
+def pca_features(X_train, X_val, X_test, n):
+    X_train_pca, _, A, Xm, _ = pca(X_train, n_components=n)
+    X_val_pca = np.matmul(X_val - Xm, A)
+    X_test_pca = np.matmul(X_test - Xm, A)
+    
+    print(X_train_pca.shape)
+    print(X_val_pca.shape)
+    print(X_test_pca.shape)
+    
+    return X_train_pca, X_val_pca, X_test_pca
 
 # Acomoda los datos de las features para pasarlos al clasificador
 def get_data(train, num_classes):

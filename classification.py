@@ -5,6 +5,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.svm import SVC
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
+from sklearn.neural_network import MLPClassifier
 import json
 import numpy as np
 
@@ -27,6 +28,7 @@ if __name__ == "__main__":
 
     def test(Xv, yv):
         # Probamos con 1 hasta 10 vecinos para ver qué resulta mejor.
+        '''
         max_knn = 0
         best_k = -1
         for k in range(1, 30):
@@ -60,6 +62,7 @@ if __name__ == "__main__":
                 best_est = est
         print(f'best random forest score: {best_rf} with {est} estimators')
 
+        '''
         svc = make_pipeline(StandardScaler(), SVC(gamma='auto'))
         svc.fit(X, y)
         score = svc.score(Xv, yv)
@@ -69,5 +72,10 @@ if __name__ == "__main__":
                                 multi_class='auto', max_iter=1000).fit(X, y)
         score = clf.score(Xv, yv)
         print(f'Logistic regression score: {score}')
+
+        nn = MLPClassifier(hidden_layer_sizes=(2048), max_iter=1000, activation='logistic')
+        nn.fit(X, y)
+        nn_score = nn.score(Xv, yv)
+        print(f'Neural network score: {nn_score}')
     
     test(Xv, yv)
