@@ -56,4 +56,4 @@ if __name__ == "__main__":
     C = all_features[:100, :, :]
     D = all_features[:166, :, :]
 
-    selection(A, 'selected_features.json')
+    selection(D, 'selected_features.json')
