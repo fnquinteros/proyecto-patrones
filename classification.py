@@ -63,15 +63,15 @@ if __name__ == "__main__":
         print(f'best random forest score: {best_rf} with {est} estimators')
 
         '''
-        # svc = make_pipeline(StandardScaler(), SVC(gamma='auto'))
-        # svc.fit(X, y)
-        # score = svc.score(Xv, yv)
-        # print(f'SVM score: {score}')
+        svc = make_pipeline(StandardScaler(), SVC(gamma='auto'))
+        svc.fit(X, y)
+        score = svc.score(Xv, yv)
+        print(f'SVM score: {score}')
 
-        # clf = LogisticRegression(random_state=0, solver='lbfgs',
-        #                         multi_class='auto', max_iter=1000).fit(X, y)
-        # score = clf.score(Xv, yv)
-        # print(f'Logistic regression score: {score}')
+        clf = LogisticRegression(random_state=0, solver='lbfgs',
+                                 multi_class='auto', max_iter=1000).fit(X, y)
+        score = clf.score(Xv, yv)
+        print(f'Logistic regression score: {score}')
 
         nn = MLPClassifier(hidden_layer_sizes=(2048), max_iter=1000, activation='logistic')
         nn.fit(X, y)
@@ -99,4 +99,4 @@ if __name__ == "__main__":
         acc = accuracy_score(ds, yv)
         print(f'SRC faces score: {acc:.4f}')
 
-    test(Xv, yv)
+    test(Xt, yt)
