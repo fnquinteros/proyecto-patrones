@@ -5,6 +5,8 @@ from sklearn.pipeline import make_pipeline
 from sklearn.svm import SVC
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
+from sklearn.decomposition import SparseCoder
+from sklearn.metrics import accuracy_score
 from sklearn.neural_network import MLPClassifier
 import json
 import numpy as np
@@ -20,8 +22,6 @@ with open('selected_features.json') as f:
 X, y = np.array(train_data['X']), np.array(train_data['y'])
 Xt, yt = np.array(test_data['X']), np.array(test_data['y'])
 Xv, yv = np.array(val_data['X']), np.array(val_data['y'])
-# svc = make_pipeline(StandardScaler(), SVC(gamma='auto'))
-# svc.fit(X, y)
 
 
 if __name__ == "__main__":
@@ -63,19 +63,40 @@ if __name__ == "__main__":
         print(f'best random forest score: {best_rf} with {est} estimators')
 
         '''
-        svc = make_pipeline(StandardScaler(), SVC(gamma='auto'))
-        svc.fit(X, y)
-        score = svc.score(Xv, yv)
-        print(f'SVM score: {score}')
+        # svc = make_pipeline(StandardScaler(), SVC(gamma='auto'))
+        # svc.fit(X, y)
+        # score = svc.score(Xv, yv)
+        # print(f'SVM score: {score}')
 
-        clf = LogisticRegression(random_state=0, solver='lbfgs',
-                                multi_class='auto', max_iter=1000).fit(X, y)
-        score = clf.score(Xv, yv)
-        print(f'Logistic regression score: {score}')
+        # clf = LogisticRegression(random_state=0, solver='lbfgs',
+        #                         multi_class='auto', max_iter=1000).fit(X, y)
+        # score = clf.score(Xv, yv)
+        # print(f'Logistic regression score: {score}')
 
         nn = MLPClassifier(hidden_layer_sizes=(2048), max_iter=1000, activation='logistic')
         nn.fit(X, y)
         nn_score = nn.score(Xv, yv)
         print(f'Neural network score: {nn_score}')
     
+        D = X
+        yv = np.expand_dims(yv, axis=1)
+        T = int(D.shape[1] * 0.1)    # number of non-zero coefficients
+        Nt = Xv.shape[0]    # number of testing samples
+        coder = SparseCoder(dictionary=D, transform_n_nonzero_coefs=T, transform_algorithm='omp')
+        ds = np.zeros((Nt, 1))    # Predicted labels
+        nc = int(np.max(y)) + 1    # number of classes o clase mayor contando dsd 0
+        for i_t in range(Nt):
+            ytest = Xv[i_t, :]
+            xt = coder.transform(ytest.reshape(1, -1))
+            e = np.ones((nc, 1))    # reconstruction error
+            for i in range(nc):
+                xi = xt.copy()
+                ii = np.argwhere(y != i)
+                # remove coefficients that do not belong to class i
+                xi[0, ii] = 0
+                e[i] = np.linalg.norm(ytest - D.T.dot(xi.T))
+            ds[i_t] = np.argmax(e)
+        acc = accuracy_score(ds, yv)
+        print(f'SRC faces score: {acc:.4f}')
+
     test(Xv, yv)
