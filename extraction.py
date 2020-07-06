@@ -6,7 +6,7 @@ import json
 OPTIONS = {
     'lbp': {
         'red': True,
-        'hdiv': 4,
+        'hdiv': 8,
         'vdiv': 8,
     },
     'hog': {
@@ -25,7 +25,7 @@ for i in range(1, 167):
         n = '00' + n
     elif len(n) == 2:
         n = '0' + n
-    print(f'... reading FaceMask166/FM000{n} ...')
+    # print(f'... reading FaceMask166/FM000{n} ...')
     for j in range(6):
         features = extract_features_img(
             f'FaceMask166/FM000{n}_0{j+1}.jpg', OPTIONS)

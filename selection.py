@@ -1,5 +1,5 @@
 from pybalu.feature_selection import clean
-from my_utils import get_data, sfs_features
+from my_utils import get_data, sfs_features, norm_features, pca_features
 import json
 import numpy as np
 
@@ -23,9 +23,11 @@ def selection(feature_dataset, file_name):
     X_val, y_val = get_data(val_features, feature_dataset.shape[0])
     X_test, y_test = get_data(test_features, feature_dataset.shape[0])
     
-    # X_train, X_val, sfs_idx = sfs_features(
-    #    X_train, X_val, y_train, n_features=50)
-    # X_test = X_test[:, sfs_idx]
+    X_train, X_val, X_test = norm_features(X_train, X_val, X_test)
+
+    # X_train, X_val, X_test = sfs_features(X_train, X_val, X_test, y_train, n_features=1000)
+
+    X_train, X_val, X_test = pca_features(X_train, X_val, X_test, 439)
 
     with open(file_name, 'w') as f:
         d = {
