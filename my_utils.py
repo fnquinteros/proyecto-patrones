@@ -31,6 +31,7 @@ def extract_features_img(st, options):
     if options.get('masked'):
         img = img[:img.shape[0] // 2]
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    ycrcb = cv2.cvtColor(img, cv2.COLOR_BGR2YCR_CB)
     b_img, _, _ = segbalu(img)
 
     def get_features(img, gray, b_img, options):
@@ -59,6 +60,9 @@ def extract_features_img(st, options):
                 XBlue = lbp_features(img[:, :, 2], hdiv=hdiv,
                                      vdiv=vdiv, mapping='nri_uniform')
                 feats.append(XBlue)
+            if lbp.get('ycrcb'):
+                XYcrcb = lbp_features(ycrcb[:, :, 0], hdiv=hdiv, vdiv=vdiv, mapping='nri_uniform')
+                feats.append(XYcrcb)
         if options.get('hog'):
             hog_opt = options.get('hog')
             v_windows = hog_opt.get('v_windows')
@@ -126,7 +130,7 @@ def dirfiles(img_path, img_ext):
     return img_names
 
 def norm_features(X_train, X_val, X_test):
-    scaler = StandardScaler()
+    scaler = MinMaxScaler()
     X_train_norm = scaler.fit_transform(X_train)
     X_val_norm = scaler.transform(X_val)
     X_test_norm = scaler.transform(X_test)
