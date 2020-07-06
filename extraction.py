@@ -14,6 +14,7 @@ OPTIONS = {
         'h_windows': 4,
         'n_bins': 16
     },
+    'gabor': True,
     'masked': True
 }
 

@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import cv2
 from PIL import Image
 from pybalu.feature_extraction import (
-    lbp_features, gupta_features, hugeo_features, flusser_features)
+    lbp_features, gupta_features, hugeo_features, flusser_features, haralick_features, gabor_features)
 from pybalu.feature_selection import clean, exsearch, sfs
 from pybalu.img_processing import segbalu
 from sklearn.metrics import confusion_matrix, accuracy_score
@@ -78,6 +78,12 @@ def extract_features_img(st, options):
         if options.get('flusser'):
             Flusser = flusser_features(b_img)
             feats.append(Flusser)
+        if options.get('haralick'):
+            Haralick = haralick_features(gray)
+            feats.append(Haralick)
+        if options.get('gabor'):
+            Gabor = gabor_features(gray, rotations=4, dilations=4)
+            feats.append(Gabor)
         return tuple(feats)
     feats = np.concatenate(get_features(img, gray, b_img, options))
     features = np.asarray(feats)
