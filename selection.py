@@ -27,7 +27,7 @@ def selection(feature_dataset, file_name):
 
     # X_train, X_val, X_test = sfs_features(X_train, X_val, X_test, y_train, n_features=1000)
 
-    X_train, X_val, X_test = pca_features(X_train, X_val, X_test, 439)
+    X_train, X_val, X_test = pca_features(X_train, X_val, X_test, 440)
 
     with open(file_name, 'w') as f:
         d = {
